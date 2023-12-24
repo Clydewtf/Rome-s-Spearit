@@ -6,14 +6,26 @@ using UnityEngine;
 public class ThrowingScript : MonoBehaviour
 {
     [SerializeField]
+    KeyCode throwingButton;
+
+    [SerializeField]
     private BalancePlayer leftArm;
 
     [SerializeField]
     private GameObject spear;
 
     [SerializeField]
+    private GameObject spearProjectile;
+
+    [SerializeField]
     private Animator animator;
 
+    [SerializeField]
+    private float maxForce;
+    [SerializeField]
+    private float deltaForce;
+
+    [SerializeField]
     private float throwingForce;
     private bool shouldThrow;
 
@@ -23,63 +35,59 @@ public class ThrowingScript : MonoBehaviour
 
     void Update()
     {
-        if (!Input.GetKey(KeyCode.Space) && shouldThrow)
+        if (!Input.GetKey(throwingButton) && shouldThrow)
         {
             animator.SetTrigger("Throw");
             shouldThrow = false;
         }
-        else if (Input.GetKey(KeyCode.Space))
+        else if (Input.GetKey(throwingButton))
         {
             shouldThrow = true;
-            throwingForce += 10.0f * Time.deltaTime;
+            if (throwingForce <= maxForce)
+                throwingForce += deltaForce * Time.deltaTime;
         }
     }
 
     public void SaveAngle()
     {
-        spear.GetComponent<BalancePlayer>().enabled = false;
         leftArm.LockRotation();
     }
 
     private void ThrowSpear()
     {
         MakeSpearProjectile();
+
         spear.GetComponent<Renderer>().enabled = false;
         spear.GetComponent<Rigidbody2D>().mass = 0.0f;
+
         StartCoroutine(DrawSpear(1.0f));
-        spear.GetComponent<BalancePlayer>().enabled = false;
+
         leftArm.UnlockRotation();
         throwingForce = 0.0f;
     }
 
     private void MakeSpearProjectile()
     {
-        GameObject spearProjectile = Instantiate(spear);
-        spearProjectile.AddComponent<BoxCollider2D>();
-        spearProjectile.transform.position = spear.transform.position;
-
-        Destroy(spearProjectile.GetComponent<HingeJoint2D>());
-        Destroy(spearProjectile.GetComponent<FixedJoint2D>());
-        Destroy(spearProjectile.GetComponent<BalancePlayer>());
-
-        Rigidbody2D spearProjectileRb = spearProjectile.GetComponent<Rigidbody2D>();
+        GameObject spawnedProjectile = Instantiate(spearProjectile);
+        spawnedProjectile.transform.SetPositionAndRotation(spear.transform.position, spear.transform.rotation);
 
         Collider2D[] playerColliders = GetComponentsInChildren<Collider2D>();
-        Collider2D spearProjectileCollider = spearProjectile.GetComponent<Collider2D>();
+        Collider2D[] spearProjectileColliders = spawnedProjectile.GetComponents<Collider2D>();
 
-        foreach (Collider2D col2 in playerColliders)
-            Physics2D.IgnoreCollision(spearProjectileCollider, col2);
+        foreach (Collider2D col1 in playerColliders)
+            foreach (Collider2D col2 in spearProjectileColliders)
+                Physics2D.IgnoreCollision(col1, col2);
 
-        float angle = spearProjectile.transform.rotation.z + Mathf.PI / 2.0f;
-        Vector2 forceVector = new(throwingForce * Mathf.Cos(angle), 
-            throwingForce * Mathf.Sin(angle));
+        Rigidbody2D spearProjectileRb = spawnedProjectile.GetComponent<Rigidbody2D>();
 
-        Debug.Log(angle);
-        Debug.Log(forceVector.x);
-        Debug.Log(forceVector.y);
+
+        float angle = -spawnedProjectile.transform.eulerAngles.z / 180 * Mathf.PI;
+
+        Vector2 forceVector = new(throwingForce * Mathf.Sin(angle), 
+            throwingForce * Mathf.Cos(angle));
         spearProjectileRb.AddForce(forceVector);
 
-        
+        Destroy(spawnedProjectile, 5.0f);
     }
 
     private IEnumerator DrawSpear(float seconds)
@@ -88,5 +96,4 @@ public class ThrowingScript : MonoBehaviour
         spear.GetComponent<Renderer>().enabled = true;
         spear.GetComponent<Rigidbody2D>().mass = 0.1f;
     }
-
 }

@@ -41,9 +41,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.11769968
+  m_TransitionDuration: 0.17669845
   m_TransitionOffset: 0
-  m_ExitTime: 0.8823003
+  m_ExitTime: 0.7811596
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -55,7 +55,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerAnimator
+  m_Name: PlayerOneAnimator
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Throw
@@ -63,7 +63,7 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -94,9 +94,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0
+  m_TransitionDuration: 0.11561394
   m_TransitionOffset: 0
-  m_ExitTime: 0.9933672
+  m_ExitTime: 0.9933674
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
