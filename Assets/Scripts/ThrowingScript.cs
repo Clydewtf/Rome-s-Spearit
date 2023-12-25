@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ThrowingScript : MonoBehaviour
@@ -10,7 +11,7 @@ public class ThrowingScript : MonoBehaviour
     private KeyCode throwingKey;
 
     [SerializeField]
-    private Button throwingButton;
+    private MyButton throwingButton;
 
     [SerializeField]
     private BalancePlayer leftArm;
@@ -33,9 +34,13 @@ public class ThrowingScript : MonoBehaviour
     private float throwingForce;
     private bool shouldThrow;
 
-
-
     void Update()
+    {
+        //ThrowingByKeyboard();
+        ThrowingByButton();
+    }
+
+    private void ThrowingByKeyboard()
     {
         if (!Input.GetKey(throwingKey) && shouldThrow)
         {
@@ -50,7 +55,20 @@ public class ThrowingScript : MonoBehaviour
         }
     }
 
-
+    private void ThrowingByButton()
+    {
+        if (!throwingButton.isPressed && shouldThrow)
+        {
+            animator.SetTrigger("Throw");
+            shouldThrow = false;
+        }
+        else if (throwingButton.isPressed)
+        {
+            shouldThrow = true;
+            if (throwingForce <= maxForce)
+                throwingForce += deltaForce * Time.deltaTime;
+        }
+    }
 
     public void SaveAngle()
     {
