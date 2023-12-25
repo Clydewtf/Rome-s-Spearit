@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ThrowingScript : MonoBehaviour
 {
     [SerializeField]
-    KeyCode throwingButton;
+    private KeyCode throwingKey;
+
+    [SerializeField]
+    private Button throwingButton;
 
     [SerializeField]
     private BalancePlayer leftArm;
@@ -29,24 +33,24 @@ public class ThrowingScript : MonoBehaviour
     private float throwingForce;
     private bool shouldThrow;
 
-    private void Start()
-    {
-    }
+
 
     void Update()
     {
-        if (!Input.GetKey(throwingButton) && shouldThrow)
+        if (!Input.GetKey(throwingKey) && shouldThrow)
         {
             animator.SetTrigger("Throw");
             shouldThrow = false;
         }
-        else if (Input.GetKey(throwingButton))
+        else if (Input.GetKey(throwingKey))
         {
             shouldThrow = true;
             if (throwingForce <= maxForce)
                 throwingForce += deltaForce * Time.deltaTime;
         }
     }
+
+
 
     public void SaveAngle()
     {
@@ -70,6 +74,8 @@ public class ThrowingScript : MonoBehaviour
     {
         GameObject spawnedProjectile = Instantiate(spearProjectile);
         spawnedProjectile.transform.SetPositionAndRotation(spear.transform.position, spear.transform.rotation);
+
+        spawnedProjectile.GetComponent<SpriteRenderer>().color = spear.GetComponent<SpriteRenderer>().color;
 
         Collider2D[] playerColliders = GetComponentsInChildren<Collider2D>();
         Collider2D[] spearProjectileColliders = spawnedProjectile.GetComponents<Collider2D>();

@@ -242,8 +242,8 @@ Transform:
   - {fileID: 6683996813280168341}
   - {fileID: 8251571712876925207}
   - {fileID: 2019057309866723038}
-  - {fileID: 5212679239687220892}
   - {fileID: 233560933270460291}
+  - {fileID: 5212679239687220892}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7096734651543858793
@@ -273,6 +273,7 @@ MonoBehaviour:
   throwingButton: 0
   leftArm: {fileID: 1468687646177340853}
   spear: {fileID: 4978110564106573082}
+  spearProjectile: {fileID: 0}
   animator: {fileID: 4439185733722398555}
   maxForce: 100
   deltaForce: 25
